@@ -1,0 +1,29 @@
+// Ross, Chandler and Joe went to their favourite pizza restaurant.
+// Total bull amount was $53, however they were not sure how to split the bill.
+// 1 slice = $8/slice --- 2 or 3 slices = $7/slice --- >3 slices = $6/slice
+
+// Slices per person
+final Integer ross_slices = 3;
+final Integer chandler_slices = 1;
+final Integer joey_slices = 4;
+
+// class that claculates de bill
+public class BillsCalculator {
+    // Price per slice
+    final Integer one_slice_price = 8;
+    final Integer two_three_slices_price = 7;
+    final Integer over_three_slices_price = 6;
+
+    public Integer calculateBill(Integer slicesNumber) {
+        return slicesNumber == 1 ? slicesNumber * one_slice_price : slicesNumber <= 3 ? slicesNumber * two_three_slices_price : slicesNumber * over_three_slices_price;
+    }
+}
+
+BillsCalculator ross = new BillsCalculator();
+BillsCalculator chandler = new BillsCalculator();
+BillsCalculator joey = new BillsCalculator();
+
+// Print the bill
+System.debug('Ross pays: ' + ross.calculateBill(ross_slices));
+System.debug('Chandler pays: ' + chandler.calculateBill(chandler_slices));
+System.debug('Joey pays: ' + joey.calculateBill(joey_slices));

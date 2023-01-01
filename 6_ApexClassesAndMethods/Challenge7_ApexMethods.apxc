@@ -1,0 +1,25 @@
+// Create a class with name 'Fitness' which has couple of methods to calculate human fitness.
+// Create a method with name 'calculateBMI' which accepts necessary parameter and returns bmi value.
+// BMI = Body Weight in Kg / Body height in Meter2
+// Create a method with name 'calculatePace' which accepts necessary parameter and return km per hour.
+// Pace = distance in km / time in minutes.
+
+// Class that calculates BMI and Pace
+public class Fitness {
+    //Method that calculates BMI
+    public static Decimal calculateBMI(Decimal bodyWeight, Decimal bodyHeight) {
+        // BMI formula
+        Decimal BMI = bodyWeight / (bodyHeight*bodyHeight);
+        return BMI;
+    }
+
+    // Method that calculates Pace
+    public static Decimal calculatePace(Decimal distance, Decimal timeInMin) {
+        // Pace formula (km/min)
+        Decimal pace = distance / timeInMin;
+        // Pace for km/h
+        Decimal paceInHour = (pace*60)/1;
+        return paceInHour;
+    }
+}
+
