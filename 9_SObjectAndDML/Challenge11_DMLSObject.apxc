@@ -1,0 +1,41 @@
+// Challenge using the generic SObject 
+
+// Create new instance of account SObject
+SObject acc = (SObject) Type.forName('Account').newInstance();
+// Adding the field values
+acc.put('Name', 'WingNut Films');
+acc.put('Rating', 'Warm');
+// Insert the new instance
+insert acc;
+
+// Get the new Account instance
+SObject account = Database.query('SELECT Id FROM Account WHERE Name=\'WingNut Films\' LIMIT 1');
+// Create new instance of opportunity SObject
+SObject opp = (SObject) Type.forName('Opportunity').newInstance();
+// Adding the field values
+opp.put('Name', 'Lord Of The Rings');
+opp.put('StageName', 'Qualification');
+opp.put('CloseDate', Date.today());
+opp.put('AccountId', account.Id);
+// Insert the new instance
+insert opp;
+
+// Update the name of the new Account instance
+account.put('Name', 'New Line Cinema');
+// Update the instance
+update account;
+
+// Get the new Opportunity instance
+SObject opportunity = Database.query('SELECT Id, Name, StageName FROM Opportunity WHERE Name=\'Lord Of The Rings\' LIMIT 1');
+// Update the Stage of the new Opportunity instance
+opportunity.put('StageName', 'Closed-Won');
+// Update the instance
+update opportunity;
+
+// Delete the instance
+delete opportunity;
+
+// Get the new Opportunity instance
+List<SObject> opps = Database.query('SELECT Id, Name, StageName FROM Opportunity WHERE isDeleted=true ALL ROWS');
+// Undelete the instance
+undelete opps;
