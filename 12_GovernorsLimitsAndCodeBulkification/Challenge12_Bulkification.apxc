@@ -1,0 +1,39 @@
+// Create a new number field 'Avg_Case_Resolution_Days__c' on Account object.
+// The new method 'updateAvgCaseResolutionDays()' does not work for multiple accounts.
+// Bulkify the method to handle multiple account update at once.
+
+public static void updateAvgCaseResolutionDays(List<Id> accounstIds) {
+	Map<Id, Integer> accountTotalCaseMap = new Map<Id, Integer>();
+	Map<Id, Integer> accountTotalCaseDaysMap = new Map<Id, Integer>();
+
+	// Retrive all the cases for this account
+	// Get resolution days for each account (ClosedDate - CreatedDate)
+	for (Case caseObj : [SELECT Id, AccountId, CreatedDate, ClosedDate FROM Case WHERE IsClosed=true AND AccountId IN : accountsIds]) {
+		// If map does not have current account id, then add it
+		if (! accountTotalCaseMap.containsKey(caseObj.AccountId)) {
+			accountTotalCaseMap.put(caseObj.AccountId, 0);
+			accountTotalCaseDaysMap.put(caseObj.AccountId, 0);
+		}
+		
+		Integer totalCases = accountTotalCaseMap.get(caseObj.AccountId);
+		totalCases++;
+		accountTotalCaseMap.put(caseObj.AccountId, totalCases);
+		
+		// Get duration in days and add it to totalDays
+		Integer totalDays = accountTotalCaseDaysMap.get(caseObj.AccountId);
+		totalDays += caseObj.CreatedDate.date().daysBetween(caseObj.ClosedDate.date());
+		accountTotalCaseDaysMap.put(caseOj.AccountId, totalDays);
+	}
+
+	// List of accounts to update
+	List<Account> accountToUpdate = new List<Account>();
+
+	for (Id accountId : accountTotalCaseMap.keySet()) {
+		Decimal resolutionDays = accountTotalCaseDaysMap.get(accountId)/accountTotalCaseMap.get(accountId);
+
+		// Update account object
+		accountToUpdate.add(new Account(Id=accountId, Avg_Case_Resolution_Days__c = resolutionDays));
+	}
+
+	update accountToUpdate;
+}

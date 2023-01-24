@@ -1,0 +1,45 @@
+// Create a new picklist field 'Profile' on Opportunity object with the values 'High', 'Medium' and 'Low'
+// Write a function that take list of opportunity record ids that performs:
+// Query these records.
+// Record amount < 10000, 'Low'
+// Record amount > 10k and < 50k, 'Medium'
+// Record amount > 50k, 'High'
+
+// Class that sets the values of the new field
+public class OpportunityController {
+
+	// Method that sets the values of the new field
+    	public static void updateProfile(List<Id> listOfIds) {
+		// Loops through the ids list
+        	for(Id singleId : listOfIds) {
+			// Queries each id
+            		Opportunity opp = [SELECT Id, Amount, Profile__c FROM Opportunity WHERE Id =: singleId];
+            
+			// Sets the new field depending on the amount
+            		if (opp.Amount < 10000) {
+                		opp.Profile__c = 'Low';
+            		} else if (opp.Amount > 50000) {
+                		opp.Profile__c = 'High';
+            		} else {
+                		opp.Profile__c = 'Medium';
+           		}
+            		
+			// Updates the opportunity
+            		update opp;
+        	}
+    	}
+}
+
+// Queries all the opportunities
+List<Opportunity> opps = [SELECT Id FROM Opportunity];
+
+// Creates the list of ids
+List<Id> listOfIds = new List<Id>();
+
+// Loops each opportunity to set the id list
+for (Opportunity opp : opps) {
+	listOfIds.add(opp.Id);	
+}
+
+// Calls the new class
+OpportunityController.updateProfile(listOfIds);
